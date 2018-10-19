@@ -12,7 +12,7 @@ export function getTotalCollections(collection) {
   return collectionCount;
 }
 
-export function CRUDResponse(state, request, object = {}) {
+export function APIResponse(state, request, object = {}) {
   return {
     data: object,
     event: {

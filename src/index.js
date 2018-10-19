@@ -12,7 +12,7 @@ import _ from 'lodash';
 import { API_CONFIG, DB_CONFIG } from './config';
 import API from './api';
 import Middleware from './middleware';
-import { getTotalCollections, CRUDNotFound, CRUDResponse } from './helpers';
+import { getTotalCollections, APIResponse } from './helpers';
 
 // Create server object.
 // Configure server with middleware to parse JSON objects and URL parameters.
@@ -76,7 +76,7 @@ _.forEach(DB_CONFIG.COLLECTIONS, element => {
 const InitialiseLoop = setInterval(() => {
   if (inMemory + inFileSystem === getTotalCollections(DB_CONFIG.COLLECTIONS) * 2) {
     Server.get('*', (request, response) => {
-      response.json(CRUDResponse(false, request));
+      response.json(APIResponse(false, request));
     });
 
     Server.listen(API_CONFIG.PORT, () => {

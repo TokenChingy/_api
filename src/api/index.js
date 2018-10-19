@@ -2,7 +2,7 @@
 import _ from 'lodash';
 
 // Import additional.
-import { CRUDResponse } from '../helpers';
+import { APIResponse } from '../helpers';
 
 // Define and export a function that automatically generates a CRUD API.
 export default function API(Server, Collection) {
@@ -10,7 +10,8 @@ export default function API(Server, Collection) {
     // Find all endpoint.
     Server.get(`/${key}`, (request, response) => {
       const foundAll = Collection.get(key).value();
-      response.json(CRUDResponse(true, request, foundAll));
+      if (foundAll) response.json(APIResponse(true, request, foundAll));
+      else response.json(APIResponse(false, request));
     });
 
     // Find one by id endpoint.
@@ -19,7 +20,8 @@ export default function API(Server, Collection) {
         .getById(request.params.id)
         .value();
 
-      response.json(CRUDResponse(true, request, foundOne));
+      if (foundOne) response.json(APIResponse(true, request, foundOne));
+      else response.json(APIResponse(false, request));
     });
 
     // Create one endpoint.
@@ -27,7 +29,10 @@ export default function API(Server, Collection) {
       Collection.get(key)
         .insert(request.body)
         .write()
-        .then(created => response.json(CRUDResponse(true, request, created)))
+        .then(created => {
+          if (created) response.json(APIResponse(true, request, created));
+          else response.json(APIResponse(false, request));
+        })
         .catch(error => response.json(error));
     });
 
@@ -36,7 +41,10 @@ export default function API(Server, Collection) {
       Collection.get(key)
         .updateById(request.params.id, request.body)
         .write()
-        .then(updated => response.json(CRUDResponse(true, request, updated)))
+        .then(updated => {
+          if (updated) response.json(APIResponse(true, request, updated));
+          else response.json(APIResponse(false, request));
+        })
         .catch(error => response.json(error));
     });
 
@@ -45,7 +53,10 @@ export default function API(Server, Collection) {
       Collection.get(key)
         .removeById(request.params.id)
         .write()
-        .then(removed => response.json(CRUDResponse(true, request, removed)))
+        .then(removed => {
+          if (removed) response.json(APIResponse(true, request, removed));
+          else response.json(APIResponse(false, request));
+        })
         .catch(error => response.json(error));
     });
   });

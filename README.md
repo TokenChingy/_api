@@ -134,7 +134,7 @@ Server.get(`/${key}`, (request, response) => {
   const foundAll = Collection.get(key)
     .helloWorld()
     .value();
-  response.json(CRUDResponse(true, request, foundAll));
+  response.json(APIResponse(true, request, foundAll));
 });
 ```
 
