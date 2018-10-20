@@ -51,6 +51,12 @@ export function routerQueries(request, collection, collectionKey) {
     end: data.size()
   };
 
+  // Set default sort parameters.
+  const sortParameters = {
+    sort: '',
+    order: 'asc'
+  };
+
   // _.forEach doesn't have an iterator...
   let forIteration = 0;
 
@@ -77,34 +83,32 @@ export function routerQueries(request, collection, collectionKey) {
     }
 
     // Checks to see if the _sort query has been passed in.
-    // If it has, it will then sort according to _order if it has been passed in.
-    // Default sort order without _order is ascending.
-    if (query === '_sort') {
-      if (queryValue === 'desc') {
-        data = data.orderBy(queryValue, 'desc');
-      } else {
-        data = data.orderBy(queryValue, 'asc');
-      }
+    if (query === '_sort' || query === '_order') {
+      if (query === '_sort') _.assign(sortParameters, { sort: queryValue });
+      if (query === '_order') _.assign(sortParameters, { order: queryValue });
     }
 
     // Checks to see if _start or _end queries have been passed in.
-    // If it has, it will then slice accordingly.
-    // Default start is index 0 and end is index of array length.
     if (query === '_start' || query === '_end') {
       const index = parseInt(queryValue, 10);
 
       if (_.isNumber(index)) {
         if (query === '_start') _.assign(sliceParameters, { start: index });
         if (query === '_end') _.assign(sliceParameters, { end: index });
-      }
 
-      if (forIteration === _.size(request.query)) {
         _.assign(headers, {
           'X-Total-Count': data.size()
         });
-
-        data = data.slice(sliceParameters.start, sliceParameters.end);
       }
+    }
+
+    // Wait until the end to sort and slice.
+    if (forIteration === _.size(request.query)) {
+      // Sort data according to the parameters.
+      data = data.orderBy(sortParameters.sort, sortParameters.order);
+
+      // Slice data according to the parameters.
+      data = data.slice(sliceParameters.start, sliceParameters.end);
     }
   });
 

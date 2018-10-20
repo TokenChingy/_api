@@ -102,7 +102,7 @@ npm run watch
 
 #### Find
 
-Before we go onto the routes, the `find` endpoints are really awesome! They can accept data operators such as filter, sort, and slice. What is even better is that you can chain them! But there is one really important thing to remember before you go chaining your URL queries — the order of operations — the data operators will generally execute from left to right but they do share the same non-guarantee as `_.forEach()` (Lodash).
+Before we go onto the routes, the `find` endpoints are really awesome! They can accept data operators such as filter, sort, and slice. What is even better is that you can chain them! But there is one really important thing to remember before you go chaining your URL queries — the order of operations — the data operators iteration order is non-guarantee as its being called from `_.forEach()` (Lodash).
 
 Find all:
 
