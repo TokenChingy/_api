@@ -143,9 +143,7 @@ With this JSON object, I would POST it to `hostname:port/users/create`. Upon suc
     "status": 200,
     "method": "POST",
     "url": "users/create",
-    "message": {
-      "success": "created user with id: 142edd1d-308f-4b7c-a762-5b4aebb3cfd0"
-    }
+    "message": {}
   }
 }
 ```
