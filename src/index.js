@@ -28,11 +28,16 @@ Server.use(
 );
 
 // Create a key and encryption object.
-const Key = new Cryptr(DB_CONFIG.SECRET);
-const Encryption = {
-  serialize: data => Key.encrypt(JSON.stringify(data)),
-  deserialize: data => JSON.parse(Key.decrypt(data))
-};
+const Encryption = {};
+
+if (DB_CONFIG.SECRET.length > 0) {
+  const Key = new Cryptr(DB_CONFIG.SECRET);
+
+  _.assign(Encryption, {
+    serialize: data => Key.encrypt(JSON.stringify(data)),
+    deserialize: data => JSON.parse(Key.decrypt(data))
+  });
+}
 
 // Track progress of collections being loaded successfully.
 let inMemory = 0;
