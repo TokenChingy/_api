@@ -47,18 +47,21 @@ _.forEach(DB_CONFIG.COLLECTIONS, element => {
     // Use adapter for LowDB instance.
     // Set defaults and write new collection file if none exists.
     // Load collection into memory.
-    // Attach middleware functions to LowDB instance.
     LowDB(Adapter)
       .then(Collection => {
         Collection.defaults(element)
           .write()
           .then(() => {
             inFileSystem += 1;
+
+            // Generate CRUD API routes for this collection.
             API(Server, Collection);
           })
           .catch(error => {
             throw new Error(error);
           });
+
+        // Attach middleware functions to LowDB instance.
         Collection._.mixin(LodashId);
         Collection._.mixin(Middleware);
       })
