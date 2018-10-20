@@ -45,7 +45,7 @@ cd _api/
 npm install
 ```
 
-3. Open up `src/config/index.js` in your favourite text editor and start editing:
+3. Open up `src/config/db/index.js` in your favourite text editor and start editing:
 
 ```js
 SECRET: 'MY_SUPER_SECRET_KEY',

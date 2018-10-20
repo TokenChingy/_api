@@ -15,7 +15,8 @@ import _ from 'lodash';
 // Import additional.
 import { responseBuilder } from '../helpers';
 
-export default function API(Server, Collection) {
+// Define and export a function that automatically generates a CRUD API for a particular collection.
+export default function Router(Server, Collection) {
   _.forEach(Collection.value(), (object, key) => {
     // Endpoint: Find All.
     Server.use(`/${key}:?`, (request, response) => {
