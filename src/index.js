@@ -75,10 +75,15 @@ _.forEach(DB_CONFIG.COLLECTIONS, element => {
 // Kill loop when all good.
 const InitialiseLoop = setInterval(() => {
   if (inMemory + inFileSystem === getTotalCollections(DB_CONFIG.COLLECTIONS) * 2) {
-    Server.get('*', (request, response) => {
-      response.json(APIResponse(false, request));
-    });
+    // Handle 404's and 500's.
+    Server.use((request, response) =>
+      response.status(404).send(APIResponse(false, request, {}, { error: 'not found' }))
+    );
+    Server.use((error, request, response) =>
+      response.status(500).send(APIResponse(false, request, {}, error))
+    );
 
+    // Start listening on configured port.
     Server.listen(API_CONFIG.PORT, () => {
       /* eslint-disable-next-line */
       console.log(`${API_CONFIG.NAME} is now running on port ${API_CONFIG.PORT}`);

@@ -12,13 +12,14 @@ export function getTotalCollections(collection) {
   return collectionCount;
 }
 
-export function APIResponse(state, request, object = {}) {
+export function APIResponse(state, request, data = {}, message = {}) {
   return {
-    data: object,
+    data,
     event: {
       status: state ? 'success' : 'fail',
       method: request.method,
-      url: request.originalUrl
+      url: request.originalUrl,
+      message
     }
   };
 }

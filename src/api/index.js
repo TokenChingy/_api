@@ -10,8 +10,7 @@ export default function API(Server, Collection) {
     // Find all endpoint.
     Server.get(`/${key}`, (request, response) => {
       const foundAll = Collection.get(key).value();
-      if (foundAll) response.json(APIResponse(true, request, foundAll));
-      else response.json(APIResponse(false, request));
+      response.json(APIResponse(true, request, foundAll));
     });
 
     // Find one by id endpoint.
@@ -20,8 +19,7 @@ export default function API(Server, Collection) {
         .getById(request.params.id)
         .value();
 
-      if (foundOne) response.json(APIResponse(true, request, foundOne));
-      else response.json(APIResponse(false, request));
+      response.json(APIResponse(true, request, foundOne));
     });
 
     // Create one endpoint.
@@ -29,10 +27,7 @@ export default function API(Server, Collection) {
       Collection.get(key)
         .insert(request.body)
         .write()
-        .then(created => {
-          if (created) response.json(APIResponse(true, request, created));
-          else response.json(APIResponse(false, request));
-        })
+        .then(created => response.json(APIResponse(true, request, created)))
         .catch(error => response.json(error));
     });
 
@@ -41,10 +36,7 @@ export default function API(Server, Collection) {
       Collection.get(key)
         .updateById(request.params.id, request.body)
         .write()
-        .then(updated => {
-          if (updated) response.json(APIResponse(true, request, updated));
-          else response.json(APIResponse(false, request));
-        })
+        .then(updated => response.json(APIResponse(true, request, updated)))
         .catch(error => response.json(error));
     });
 
@@ -53,10 +45,7 @@ export default function API(Server, Collection) {
       Collection.get(key)
         .removeById(request.params.id)
         .write()
-        .then(removed => {
-          if (removed) response.json(APIResponse(true, request, removed));
-          else response.json(APIResponse(false, request));
-        })
+        .then(removed => response.json(APIResponse(true, request, removed)))
         .catch(error => response.json(error));
     });
   });
