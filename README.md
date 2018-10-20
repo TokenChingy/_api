@@ -34,7 +34,7 @@
 
 - ~~Improve README.md.~~
 - ~~Rewrite API endpoint logic to implement functions such as sort, limit, and operators.~~
-- Implement \_gte, \_gt, \_lte, and \_lt operators to the API for find, update, and remove endpoints.
+- Implement \_gte, \_gt, \_lte, and \_lt comparators to the API for find, update, and remove endpoints.
 - Implement schema validation functionality.
 - Implement an admin interface.
 
@@ -54,7 +54,7 @@ cd _api/
 npm install
 ```
 
-3. Open up `src/config/db/index.js` in your favourite text editor and start editing:
+3. Open up `src/config/db/index.js` in your favorite text editor and start editing:
 
 ```js
 SECRET: 'MY_SUPER_SECRET_KEY',
@@ -102,7 +102,7 @@ npm run watch
 
 #### Find
 
-Before we go onto the routes, the `find` enpoints are really awesome! They can accept data operators such as filter, sort, and slice. What is even better is that you can chain them! But there is one really important thing to remember before you go chaining your URL queries — the order of operations — the data operators will generally execute from left to right but they do share the same non-guarantee as `_.forEach()` (Lodash).
+Before we go onto the routes, the `find` endpoints are really awesome! They can accept data operators such as filter, sort, and slice. What is even better is that you can chain them! But there is one really important thing to remember before you go chaining your URL queries — the order of operations — the data operators will generally execute from left to right but they do share the same non-guarantee as `_.forEach()` (Lodash).
 
 Find all:
 
@@ -166,7 +166,7 @@ hostname:port/your_collection/update?_id=123
 
 Update by filter:
 
-You can update one or more by filter. Filter only accepts JSON objects. This means when you pass it into the URL parameters, you will need to convert to a valid JSON string which will need to be converted to % notation — JSON.stringify() does this for you. The respone will be the document or documents updated.
+You can update one or more by filter. Filter only accepts JSON objects. This means when you pass it into the URL parameters, you will need to convert to a valid JSON string which will need to be converted to % notation — JSON.stringify() does this for you. The response will be the document or documents updated.
 
 ```url
 hostname:port/your_collection/update?_filter={"key":"value"}
@@ -184,7 +184,7 @@ hostname:port/your_collection/remove?_id=123
 
 Remove by filter:
 
-You can remove one or more by filter. Filter only accepts JSON objects. This means when you pass it into the URL parameters, you will need to convert to a valid JSON string which will need to be converted to % notation — JSON.stringify() does this for you. The respone will be the document or documents removed.
+You can remove one or more by filter. Filter only accepts JSON objects. This means when you pass it into the URL parameters, you will need to convert to a valid JSON string which will need to be converted to % notation — JSON.stringify() does this for you. The response will be the document or documents removed.
 
 ```url
 hostname:port/your_collection/remove?_filter={"key":"value"}
@@ -215,7 +215,7 @@ The helpers file: `src/helpers/index.js` contain all your reusable functions. Ju
 
 ### isJSONString()
 
-Checks to see if a string is a vaild JSON String which can be parsed into a JSON object. Returns either `true` or `false`.
+Checks to see if a string is a valid JSON String which can be parsed into a JSON object. Returns either `true` or `false`.
 
 ```js
 isJSONString((string: String));
@@ -231,7 +231,7 @@ getTotalCollections((collection: Object));
 
 ### responseBuilder()
 
-This function takes in a HTTP status code, request header, data object, and a message object to then return a JSON object for the response body. If the data object provided is empty, this will return a `404 not found` respone body regardless of what the code input was.
+This function takes in a HTTP status code, request header, data object, and a message object to then return a JSON object for the response body. If the data object provided is empty, this will return a `404 not found` response body regardless of what the code input was.
 
 ```js
 responseBuilder((code: Number), (request: Object), (data: Object), (message: Object));
