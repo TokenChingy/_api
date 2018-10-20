@@ -76,16 +76,16 @@ The endpoints are pretty simple:
 hostname:port/your_collection
 ```
 
+- Find one by id (GET).
+
+```url
+hostname:port/your_collection/where?id=123
+```
+
 - Find all with filter (GET).
 
 ```url
 hostname:port/your_collection/where?key=value&another_key=another_value
-```
-
-- Find one by Id (GET).
-
-```url
-hostname:port/your_collection/where?id=123
 ```
 
 - Create one (POST).
@@ -94,25 +94,25 @@ hostname:port/your_collection/where?id=123
 hostname:port/your_collection/create
 ```
 
-- Update one by Id (POST).
+- Update one by id (POST).
 
 ```url
 hostname:port/your_collection/update/where?id=123
 ```
 
-- Update all with filter (GET).
+- Update all with filter (POST).
 
 ```url
 hostname:port/your_collection/update/where?key=value&another_key=another_value
 ```
 
-- Remove one by Id (POST).
+- Remove one by id (POST).
 
 ```url
 hostname:port/your_collection/remove/where?id=123
 ```
 
-- Remove all with filter (GET).
+- Remove all with filter (POST).
 
 ```url
 hostname:port/your_collection/remove/where?key=value&another_key=another_value
