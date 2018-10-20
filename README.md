@@ -116,9 +116,10 @@ With this JSON object, I would POST it to `hostname:port/users/create`. Upon suc
     "lastName": "Smith"
   },
   "event": {
-    "status": "success",
+    "status": 200,
     "method": "POST",
-    "url": "users/create"
+    "url": "users/create",
+    "message": {}
   }
 }
 ```
