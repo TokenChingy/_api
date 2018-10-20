@@ -24,6 +24,7 @@
 
 ### Todo
 
+- Improve README.md.
 - Rewrite API endpoint logic to implement functions such as sort, limit, and operators.
 - Implement schema validation functionality.
 - Implement an admin interface.
@@ -38,7 +39,7 @@ Download or clone this repository and then:
 cd _api/
 ```
 
-2. Install the required node moduels:
+2. Install the required node modules:
 
 ```bash
 npm install
@@ -195,7 +196,7 @@ Server.get(`/${key}`, (request, response) => {
 });
 ```
 
-On-top of these chained middleware functions, you can also utilise any ExpressJS middleware in the same way. Just make sure you define it before the collection/database generation logic.
+On-top of these chained middleware functions, you can also utilise any ExpressJS middleware as you normally would. Just make sure you define it before the collection/database generation logic.
 
 ## Helpers
 
