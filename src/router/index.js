@@ -13,16 +13,20 @@ import _ from 'lodash';
 // - DB.
 
 // Import additional.
-import { responseBuilder } from '../helpers';
+import { responseBuilder, routerQueries } from '../helpers';
 
 // Define and export a function that automatically generates a CRUD API for a particular collection.
 export default function Router(Server, Collection) {
   _.forEach(Collection.value(), (object, key) => {
     // Endpoint: Find All.
     Server.use(`/${key}:?`, (request, response) => {
-      const result = Collection.get(key).value();
+      const result = routerQueries(request, Collection, key);
 
-      response.json(responseBuilder(200, request, result));
+      _.forEach(result.headers, (value, header) => {
+        response.set(header, value);
+      });
+
+      response.json(responseBuilder(200, request, result.data));
     });
   });
 }
