@@ -1,7 +1,7 @@
 // DB configuration.
 const DB_CONFIG = {
   LOCATION: 'src/collections',
-  SECRET: 'MY_SUPER_SECRET_KEY',
+  SECRET: '',
   COLLECTIONS: [
     {
       users: []
