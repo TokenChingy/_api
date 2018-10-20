@@ -12,13 +12,13 @@ Download or clone this repository and then:
 cd _api/
 ```
 
-1. Install the required node moduels:
+2. Install the required node moduels:
 
 ```bash
 npm install
 ```
 
-1. Open up `src/config/index.js` in your favourite text editor and start editing:
+3. Open up `src/config/index.js` in your favourite text editor and start editing:
 
 ```js
 SECRET: 'MY_SUPER_SECRET_KEY',
@@ -45,6 +45,18 @@ COLLECTIONS: [
 ```
 
 _You can delete the users collection, it's there as an example._
+
+4. Now you can start the API.
+
+```bash
+npm run start
+```
+
+or if you prefer to develop with Nodemon;
+
+```bash
+npm run watch
+```
 
 ## Accessing the API
 
