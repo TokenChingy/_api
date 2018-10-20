@@ -6,6 +6,7 @@ import FileAsync from 'lowdb/adapters/FileAsync';
 import LodashId from 'lodash-id';
 import LowDB from 'lowdb';
 import Morgan from 'morgan';
+import Path from 'path';
 import _ from 'lodash';
 
 // Import additional modules.
@@ -23,14 +24,6 @@ Server.use(
   BodyParser.urlencoded({
     extended: true
   })
-);
-
-// Handle 404's and 500's.
-Server.use((request, response) =>
-  response.status(404).send(buildResponse(404, request, {}, { error: 'not found' }))
-);
-Server.use((error, request, response) =>
-  response.status(500).send(buildResponse(500, request, {}, error))
 );
 
 // Create a key and encryption object.
@@ -78,15 +71,27 @@ _.forEach(DB_CONFIG.COLLECTIONS, element => {
   });
 });
 
+Server.get('/', (request, response) => {
+  response.sendFile(Path.join(__dirname, './public/index.html'));
+});
+
 // Poll until collections have all been loaded in memory and saved to the file system.
 // When ready, start Express server and listen to requests.
 // Kill loop when all good.
 const CollectionsReady = setInterval(() => {
   if (inMemory + inFileSystem === getTotalCollections(DB_CONFIG.COLLECTIONS) * 2) {
+    // Handle 404's and 500's.
+    Server.use((request, response) => {
+      response.status(404).send(buildResponse(404, request, {}, { error: 'not found' }));
+    });
+    Server.use((error, request, response) =>
+      response.status(500).send(buildResponse(500, request, {}, error))
+    );
+
     // Start listening on configured port.
     Server.listen(API_CONFIG.PORT, () => {
       /* eslint-disable-next-line */
-      console.log(`${API_CONFIG.NAME} is now running on port ${API_CONFIG.PORT}`);
+      console.log(`${API_CONFIG.NAME} is now listening on port ${API_CONFIG.PORT}`);
     });
 
     clearInterval(CollectionsReady);
