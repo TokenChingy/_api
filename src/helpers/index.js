@@ -45,7 +45,7 @@ export function routerQueries(request, collection, collectionKey) {
   let data = collection.get(collectionKey);
   const headers = {};
 
-  const filterParameters = {};
+  let filterParameters;
 
   // Set default sort parameters.
   const sortParameters = {
@@ -79,7 +79,7 @@ export function routerQueries(request, collection, collectionKey) {
 
     // Checks to see if the _filter query has been passed in.
     if (query === '_filter') {
-      if (isJSONString(queryValue)) _.assign(filterParameters, JSON.parse(queryValue));
+      if (isJSONString(queryValue)) filterParameters = JSON.parse(queryValue);
     }
 
     // Checks to see if the _sort query has been passed in.
@@ -103,9 +103,7 @@ export function routerQueries(request, collection, collectionKey) {
     }
   });
 
-  // Wait until the end to sort and slice.
-
-  _.forEach(request.query, query => {
+  _.forEach(request.query, (queryValue, query) => {
     // Filter data according to the parameters.
     if (query === '_filter') data = data.filter(filterParameters);
 
