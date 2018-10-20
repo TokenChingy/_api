@@ -13,7 +13,7 @@ import _ from 'lodash';
 import { API_CONFIG, DB_CONFIG } from './config';
 import API from './api';
 import Middleware from './middleware';
-import { buildResponse, getTotalCollections } from './helpers';
+import { responseBuilder, getTotalCollections } from './helpers';
 
 // Create server object.
 // Configure server with middleware to parse JSON objects and URL parameters.
@@ -82,10 +82,10 @@ const CollectionsReady = setInterval(() => {
   if (inMemory + inFileSystem === getTotalCollections(DB_CONFIG.COLLECTIONS) * 2) {
     // Handle 404's and 500's.
     Server.use((request, response) => {
-      response.status(404).send(buildResponse(404, request, {}, { error: 'not found' }));
+      response.status(404).send(responseBuilder(404, request, {}, { error: 'not found' }));
     });
     Server.use((error, request, response) =>
-      response.status(500).send(buildResponse(500, request, {}, error))
+      response.status(500).send(responseBuilder(500, request, {}, error))
     );
 
     // Start listening on configured port.

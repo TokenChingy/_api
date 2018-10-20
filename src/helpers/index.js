@@ -13,10 +13,10 @@ export function getTotalCollections(collection) {
 }
 
 // Function to handle and construct a response object that passes back data requested as well as information on the request.
-export function buildResponse(code, request, data = {}, message = {}) {
+export function responseBuilder(code, request, data = {}, message = {}) {
   return {
     data,
-    event: {
+    feedback: {
       status: code,
       method: request.method,
       url: request.originalUrl,

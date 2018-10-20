@@ -2,7 +2,7 @@
 import _ from 'lodash';
 
 // Import additional.
-import { buildResponse } from '../helpers';
+import { responseBuilder } from '../helpers';
 
 // Define and export a function that automatically generates a CRUD API for a particular collection.
 export default function API(Server, Collection) {
@@ -10,7 +10,7 @@ export default function API(Server, Collection) {
     // Find all endpoint.
     Server.get(`/${key}`, (request, response) => {
       const foundAll = Collection.get(key).value();
-      response.json(buildResponse(200, request, foundAll));
+      response.json(responseBuilder(200, request, foundAll, { success: `found ${key}` }));
     });
 
     // Find one by id endpoint.
@@ -18,7 +18,11 @@ export default function API(Server, Collection) {
       const foundOne = Collection.get(key)
         .getById(request.params.id)
         .value();
-      response.json(buildResponse(200, request, foundOne));
+      response.json(
+        responseBuilder(200, request, foundOne, {
+          success: `found ${key} with id: ${request.params.id}`
+        })
+      );
     });
 
     // Create one endpoint.
@@ -27,7 +31,11 @@ export default function API(Server, Collection) {
         .insert(request.body)
         .write()
         .then(created => {
-          response.json(buildResponse(200, request, created));
+          response.json(
+            responseBuilder(200, request, created, {
+              success: `created ${key} with id: ${created.id}`
+            })
+          );
         })
         .catch(error => {
           throw new Error(error);
@@ -40,7 +48,11 @@ export default function API(Server, Collection) {
         .updateById(request.params.id, request.body)
         .write()
         .then(updated => {
-          response.json(buildResponse(200, request, updated));
+          response.json(
+            responseBuilder(200, request, updated, {
+              success: `updated ${key} with id: ${updated.id}`
+            })
+          );
         })
         .catch(error => {
           throw new Error(error);
@@ -53,7 +65,9 @@ export default function API(Server, Collection) {
         .removeById(request.params.id)
         .write()
         .then(removed => {
-          response.json(buildResponse(200, request, removed));
+          response.json(
+            responseBuilder(200, request, { success: `removed ${key} with id: ${removed.id}` })
+          );
         })
         .catch(error => {
           throw new Error(error);
