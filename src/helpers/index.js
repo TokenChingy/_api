@@ -1,7 +1,7 @@
 // Import node modules.
 import _ from 'lodash';
 
-// Function that parses a DB_CONFIG.COLLECTION object to determine the number of collections.
+// Function that parses a DB_CONFIG.COLLECTION object to determine the total number of collections.
 export function getTotalCollections(collection) {
   let collectionCount = 0;
 

@@ -4,7 +4,7 @@ import _ from 'lodash';
 // Import additional.
 import { buildResponse } from '../helpers';
 
-// Define and export a function that automatically generates a CRUD API.
+// Define and export a function that automatically generates a CRUD API for a particular collection.
 export default function API(Server, Collection) {
   _.forEach(Collection.value(), (object, key) => {
     // Find all endpoint.

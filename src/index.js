@@ -78,7 +78,7 @@ _.forEach(DB_CONFIG.COLLECTIONS, element => {
   });
 });
 
-// Poll until collections have all been loaded in memory and saved to the file systen.
+// Poll until collections have all been loaded in memory and saved to the file system.
 // When ready, start Express server and listen to requests.
 // Kill loop when all good.
 const CollectionsReady = setInterval(() => {
