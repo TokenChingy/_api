@@ -45,16 +45,18 @@ export function routerQueries(request, collection, collectionKey) {
   let data = collection.get(collectionKey);
   const headers = {};
 
-  // Set default slice parameters.
-  const sliceParameters = {
-    start: 0,
-    end: data.size()
-  };
+  const filterParameters = {};
 
   // Set default sort parameters.
   const sortParameters = {
     sort: '',
     order: 'asc'
+  };
+
+  // Set default slice parameters.
+  const sliceParameters = {
+    start: 0,
+    end: data.size()
   };
 
   // _.forEach doesn't have an iterator...
@@ -76,10 +78,8 @@ export function routerQueries(request, collection, collectionKey) {
     }
 
     // Checks to see if the _filter query has been passed in.
-    // If it has, it will then filter according to the JSON object passed in.
-    // Reassign the filtered data to data.
     if (query === '_filter') {
-      if (isJSONString(queryValue)) data = data.filter(JSON.parse(queryValue));
+      if (isJSONString(queryValue)) _.assign(filterParameters, JSON.parse(queryValue));
     }
 
     // Checks to see if the _sort query has been passed in.
@@ -101,15 +101,20 @@ export function routerQueries(request, collection, collectionKey) {
         });
       }
     }
+  });
 
-    // Wait until the end to sort and slice.
-    if (forIteration === _.size(request.query)) {
-      // Sort data according to the parameters.
-      data = data.orderBy(sortParameters.sort, sortParameters.order);
+  // Wait until the end to sort and slice.
 
-      // Slice data according to the parameters.
+  _.forEach(request.query, query => {
+    // Filter data according to the parameters.
+    if (query === '_filter') data = data.filter(filterParameters);
+
+    // Sort data according to the parameters.
+    if (query === '_sort') data = data.orderBy(sortParameters.sort, sortParameters.order);
+
+    // Slice data according to the parameters.
+    if (query === '_start' || query === '_end')
       data = data.slice(sliceParameters.start, sliceParameters.end);
-    }
   });
 
   // Finally return queried data.
