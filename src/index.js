@@ -94,8 +94,7 @@ const CollectionsReady = setInterval(() => {
 
     // Start listening on configured port.
     Server.listen(API_CONFIG.PORT, () => {
-      /* eslint-disable-next-line */
-      console.log(`${API_CONFIG.NAME} is now listening on port ${API_CONFIG.PORT}`);
+      process.stdout.write(`${API_CONFIG.NAME} is now listening on port ${API_CONFIG.PORT}\n`);
     });
 
     clearInterval(CollectionsReady);
