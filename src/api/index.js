@@ -2,7 +2,7 @@
 import _ from 'lodash';
 
 // Import additional.
-import { APIResponse } from '../helpers';
+import { buildResponse } from '../helpers';
 
 // Define and export a function that automatically generates a CRUD API.
 export default function API(Server, Collection) {
@@ -10,7 +10,7 @@ export default function API(Server, Collection) {
     // Find all endpoint.
     Server.get(`/${key}`, (request, response) => {
       const foundAll = Collection.get(key).value();
-      response.json(APIResponse(true, request, foundAll));
+      response.json(buildResponse(200, request, foundAll));
     });
 
     // Find one by id endpoint.
@@ -18,8 +18,7 @@ export default function API(Server, Collection) {
       const foundOne = Collection.get(key)
         .getById(request.params.id)
         .value();
-
-      response.json(APIResponse(true, request, foundOne));
+      response.json(buildResponse(200, request, foundOne));
     });
 
     // Create one endpoint.
@@ -27,8 +26,12 @@ export default function API(Server, Collection) {
       Collection.get(key)
         .insert(request.body)
         .write()
-        .then(created => response.json(APIResponse(true, request, created)))
-        .catch(error => response.json(error));
+        .then(created => {
+          response.json(buildResponse(200, request, created));
+        })
+        .catch(error => {
+          throw new Error(error);
+        });
     });
 
     // Update one by id endpoint.
@@ -36,8 +39,12 @@ export default function API(Server, Collection) {
       Collection.get(key)
         .updateById(request.params.id, request.body)
         .write()
-        .then(updated => response.json(APIResponse(true, request, updated)))
-        .catch(error => response.json(error));
+        .then(updated => {
+          response.json(buildResponse(200, request, updated));
+        })
+        .catch(error => {
+          throw new Error(error);
+        });
     });
 
     // Remove one by id endpoint.
@@ -45,8 +52,12 @@ export default function API(Server, Collection) {
       Collection.get(key)
         .removeById(request.params.id)
         .write()
-        .then(removed => response.json(APIResponse(true, request, removed)))
-        .catch(error => response.json(error));
+        .then(removed => {
+          response.json(buildResponse(200, request, removed));
+        })
+        .catch(error => {
+          throw new Error(error);
+        });
     });
   });
 }

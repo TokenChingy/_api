@@ -1,7 +1,7 @@
 // API configuration.
 export const API_CONFIG = {
-  NAME: 'Bob',
-  PORT: 3000,
+  NAME: '_api',
+  PORT: 1337,
   MORGAN: 'dev'
 };
 

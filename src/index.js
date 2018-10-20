@@ -12,7 +12,7 @@ import _ from 'lodash';
 import { API_CONFIG, DB_CONFIG } from './config';
 import API from './api';
 import Middleware from './middleware';
-import { getTotalCollections, APIResponse } from './helpers';
+import { buildResponse, getTotalCollections } from './helpers';
 
 // Create server object.
 // Configure server with middleware to parse JSON objects and URL parameters.
@@ -23,6 +23,14 @@ Server.use(
   BodyParser.urlencoded({
     extended: true
   })
+);
+
+// Handle 404's and 500's.
+Server.use((request, response) =>
+  response.status(404).send(buildResponse(404, request, {}, { error: 'not found' }))
+);
+Server.use((error, request, response) =>
+  response.status(500).send(buildResponse(500, request, {}, error))
 );
 
 // Create a key and encryption object.
@@ -70,25 +78,17 @@ _.forEach(DB_CONFIG.COLLECTIONS, element => {
   });
 });
 
-// Loop that waits until collections have all been loaded in memory and saved to the file systen.
+// Poll until collections have all been loaded in memory and saved to the file systen.
 // When ready, start Express server and listen to requests.
 // Kill loop when all good.
-const InitialiseLoop = setInterval(() => {
+const CollectionsReady = setInterval(() => {
   if (inMemory + inFileSystem === getTotalCollections(DB_CONFIG.COLLECTIONS) * 2) {
-    // Handle 404's and 500's.
-    Server.use((request, response) =>
-      response.status(404).send(APIResponse(false, request, {}, { error: 'not found' }))
-    );
-    Server.use((error, request, response) =>
-      response.status(500).send(APIResponse(false, request, {}, error))
-    );
-
     // Start listening on configured port.
     Server.listen(API_CONFIG.PORT, () => {
       /* eslint-disable-next-line */
       console.log(`${API_CONFIG.NAME} is now running on port ${API_CONFIG.PORT}`);
     });
 
-    clearInterval(InitialiseLoop);
+    clearInterval(CollectionsReady);
   }
-}, 1000 / 10);
+}, 1000 / 100);

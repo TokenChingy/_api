@@ -12,11 +12,12 @@ export function getTotalCollections(collection) {
   return collectionCount;
 }
 
-export function APIResponse(state, request, data = {}, message = {}) {
+// Function to handle and construct a response object that passes back data requested as well as information on the request.
+export function buildResponse(code, request, data = {}, message = {}) {
   return {
     data,
     event: {
-      status: state ? 'success' : 'fail',
+      status: code,
       method: request.method,
       url: request.originalUrl,
       message
