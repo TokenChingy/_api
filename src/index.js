@@ -10,15 +10,16 @@ import Path from 'path';
 import _ from 'lodash';
 
 // Import additional modules.
-import { API_CONFIG, DB_CONFIG } from './config';
-import API from './api';
+import DB_CONFIG from './config/db';
+import SERVER_CONFIG from './config/server';
 import Middleware from './middleware';
+import Router from './router';
 import { responseBuilder, getTotalCollections } from './helpers';
 
 // Create server object.
 // Configure server with middleware to parse JSON objects and URL parameters.
 const Server = new Express();
-Server.use(Morgan(API_CONFIG.MORGAN));
+Server.use(Morgan(SERVER_CONFIG.MORGAN));
 Server.use(BodyParser.json());
 Server.use(
   BodyParser.urlencoded({
@@ -55,7 +56,7 @@ _.forEach(DB_CONFIG.COLLECTIONS, element => {
             inFileSystem += 1;
 
             // Generate CRUD API routes for this collection.
-            API(Server, Collection);
+            Router(Server, Collection);
           })
           .catch(error => {
             throw new Error(error);
@@ -93,8 +94,10 @@ const CollectionsReady = setInterval(() => {
     );
 
     // Start listening on configured port.
-    Server.listen(API_CONFIG.PORT, () => {
-      process.stdout.write(`${API_CONFIG.NAME} is now listening on port ${API_CONFIG.PORT}\n`);
+    Server.listen(SERVER_CONFIG.PORT, () => {
+      process.stdout.write(
+        `${SERVER_CONFIG.NAME} is now listening on port ${SERVER_CONFIG.PORT}\n`
+      );
     });
 
     clearInterval(CollectionsReady);
