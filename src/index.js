@@ -81,6 +81,7 @@ Server.get('/', (request, response) => {
 const CollectionsReady = setInterval(() => {
   if (inMemory + inFileSystem === getTotalCollections(DB_CONFIG.COLLECTIONS) * 2) {
     // Handle 404's and 500's.
+    // These have to be defined here after all the promises have executed and collections with their endpoints loaded.
     Server.use((request, response) => {
       response.status(404).send(responseBuilder(404, request, {}, { error: 'not found' }));
     });
