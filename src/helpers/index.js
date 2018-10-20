@@ -17,10 +17,10 @@ export function responseBuilder(code, request, data = {}, message = {}) {
   return {
     data,
     feedback: {
-      status: code,
+      status: _.isEmpty(data) && _.isEmpty(message) ? 404 : code,
       method: request.method,
       url: request.originalUrl,
-      message
+      message: _.isEmpty(data) && _.isEmpty(message) ? { error: 'not found' } : message
     }
   };
 }
