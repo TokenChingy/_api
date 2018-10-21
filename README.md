@@ -6,8 +6,9 @@
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
     - [Foreword](#foreword)
-    - [Todo](#todo)
     - [Features](#features)
+    - [Just don't do it](#just-dont-do-it)
+    - [Todo](#todo)
   - [Getting started](#getting-started)
   - [CRUD API](#crud-api)
     - [Endpoints](#endpoints)
@@ -32,15 +33,6 @@
 
 \_api came about due to sheer curiosity. It's important to understand however, \_api was not built for large-scale applications, it's underlying database layer [LowDB](https://github.com/typicode/lowdb) is built on pure JSON objects for storage and [Lodash](https://lodash.com) for parsing. This doesn't mean that \_api isn't worth your time, the biggest positive that I see with \_api is the sheer simplicity of both the concept and the code written thereby simplifying development and maintenance.
 
-### Todo
-
-- ~~Improve README.md.~~
-- ~~Rewrite API endpoint logic to implement functions such as sort, limit, and operators.~~
-- Implement \_gte, \_gt, \_lte, and \_lt comparators to the API for find, update, and remove endpoints.
-- ~~Implement schema validation for creates.~~
-- Implement schema validation for updates.
-- Implement an admin interface.
-
 ### Features
 
 - Automatic CRUD API generation through the editing of config files (Theres only 3 files).
@@ -51,6 +43,24 @@
   - Create endpoint supports automatic schema validation when schema is defined.
 - Supports middleware functions for lodash chaining via mixins.
 - By design each collection is saved in it's own JSON file thereby minimizing file size when writing to disk.
+
+### Just don't do it
+
+As great as I think \_api is, there are a few things I'm going to mention... and it's touched on in the foreword but I'll reiterate:
+
+- **Don't use this for large-scale applications.** It's storing data in memory in JSON format. As fast as NodeJS is at reading/writing/parsing JSON, it's just not made out for it. Use a full-blown database like MongoDB or MariaDB. There's a great auto-api project called [Strapi](https://github.com/strapi/strapi) that will suit those needs just fine!
+- Don't store Base64 media in the database. It's going to cause bloat and slow down \_api. If you need to store images, store them elsewhere and link to them in the database.
+- If you need high concurrent access to the \_api, this isn't for you. In fact NodeJS is probably not for you — look elsewhere.
+- You can throw more hardware (CPU and RAM) at \_api but remember; cost to performance. LowDB doesn't scale very well if at all. I've sharded the database into separate JSON objects for each collection so it's as scaled as it can be within reason (and simplicity of code) I might in future explore further methods to enable clustering and PM2 integration but for now it's good enough.
+
+### Todo
+
+- ~~Improve README.md.~~
+- ~~Rewrite API endpoint logic to implement functions such as sort, limit, and operators.~~
+- Implement \_gte, \_gt, \_lte, and \_lt comparators to the API for find, update, and remove endpoints.
+- ~~Implement schema validation for creates.~~
+- Implement schema validation for updates.
+- Implement an admin interface.
 
 ## Getting started
 
