@@ -10,7 +10,7 @@
     - [Just don't do it](#just-dont-do-it)
     - [Todo](#todo)
   - [Getting started](#getting-started)
-  - [CRUD API](#crud-api)
+  - [API](#api)
     - [Endpoints](#endpoints)
       - [Find](#find)
       - [Create](#create)
@@ -23,6 +23,8 @@
     - [responseBuilder()](#responsebuilder)
     - [requestQueryHandler()](#requestqueryhandler)
     - [validateSchema()](#validateschema)
+  - [Other](#other)
+    - [Loader.io](#loaderio)
   - [License](#license)
 
 ## Introduction
@@ -131,7 +133,7 @@ or if you prefer to develop with Nodemon;
 npm run watch
 ```
 
-## CRUD API
+## API
 
 \_api is great in that it will automatically generate all the CRUD routes with the data operation functions for you. Below are the auto-generated routes.
 
@@ -304,6 +306,12 @@ Barebones JSON validator. Accepts two JSON objects; first one is the incoming ob
 ```js
 validateSchema((object: Object), (schema: Object));
 ```
+
+## Other
+
+### Loader.io
+
+By default, \_api supports load testing from [loader.io](https://loader.io/). There is a predefined route available for [loader.io](https://loader.io/) to validate against. To set this up, head to the `src/config/server/index.js` file and edit the `LOADER` property. You just need to supply the string [loader.io](https://loader.io/) provides as the value for the property.
 
 ## License
 

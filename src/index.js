@@ -80,9 +80,19 @@ _.forEach(DB_CONFIG.COLLECTIONS, element => {
   });
 });
 
+// Additional routes are defined here.
+// Serve a landing page.
 Server.get('/', (request, response) => {
   response.sendFile(Path.join(__dirname, './public/index.html'));
 });
+
+// For load testing purposes to validate loader.io.
+// Route is only created if there is a loader string.
+if (!_.isEmpty(SERVER_CONFIG.LOADER)) {
+  Server.get(`/${SERVER_CONFIG.LOADER}`, (request, response) => {
+    response.send(SERVER_CONFIG.LOADER);
+  });
+}
 
 // Poll until collections have all been loaded in memory and saved to the file system.
 // When ready, start Express server and listen to requests.

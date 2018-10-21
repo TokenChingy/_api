@@ -2,7 +2,8 @@
 const SERVER_CONFIG = {
   NAME: '_api',
   PORT: 1337,
-  MORGAN: 'dev'
+  MORGAN: 'dev',
+  LOADER: ''
 };
 
 export default SERVER_CONFIG;
