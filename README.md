@@ -1,7 +1,6 @@
 ![_api](https://i.imgur.com/ej1ITlC.png)
 
 # \_api
-[![Build Status](https://travis-ci.org/TokenChingy/_api.svg?branch=master)](https://travis-ci.org/TokenChingy/_api)
 
 ## Table of Contents
 
@@ -83,6 +82,7 @@ Having said that, \_api can happily handle 50 sustained concurrent users creatin
 - ~~Rewrite API endpoint logic to implement functions such as sort, limit, and operators.~~
 - Implement \_gte, \_gt, \_lte, and \_lt comparators to the API for find, update, and remove endpoints.
 - ~~Implement schema validation for creates.~~
+- Write unit tests.
 - Implement schema validation for updates.
 - Implement GraphQL.
 - Implement an admin interface.
