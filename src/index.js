@@ -20,6 +20,9 @@ import { responseBuilder, getTotalCollections } from './helpers';
 // Create server object.
 // Configure server with middleware to parse JSON objects and URL parameters.
 const Server = new Express();
+
+// Define a rate limit for the express server.
+// This rate limit is global and will apply to all endpoints.
 const ServerRateLimit = new RateLimit(SERVER_CONFIG.RATE_LIMIT);
 
 // Declare server middleware.
@@ -85,8 +88,8 @@ _.forEach(DB_CONFIG.COLLECTIONS, element => {
   });
 });
 
-// Additional routes are defined here.
-// Serve a landing page.
+// Static routes defined here instead of the router function. This is because the router function gets called multiple times to define routes for each collection.
+// Serve a static landing page.
 Server.get('/', (request, response) => {
   response.sendFile(Path.join(__dirname, './public/index.html'));
 });
@@ -101,7 +104,6 @@ if (!_.isEmpty(SERVER_CONFIG.LOADER)) {
 
 // Poll until collections have all been loaded in memory and saved to the file system.
 // When ready, start Express server and listen to requests.
-// Kill loop when all good.
 const CollectionsReady = setInterval(() => {
   if (inMemory + inFileSystem === getTotalCollections(DB_CONFIG.COLLECTIONS) * 2) {
     // Handle 404's and 500's.
@@ -120,6 +122,7 @@ const CollectionsReady = setInterval(() => {
       );
     });
 
+    // Kill loop when all good.
     clearInterval(CollectionsReady);
   }
 }, 1000 / 100);
