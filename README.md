@@ -175,7 +175,7 @@ hostname:port/your_collection?_sort=key&_order=desc
 
 Find by slice:
 
-You can slice your results by specifying a start index and an end index. Either is optional and will default to `start = 0` and `end = collection.size()`. If you are slicing, an additional header property `X-Total-Count` which will hold the total documents in the result returned.
+You can slice your results by specifying a start index and an end index. Either is optional and will default to `start = 0` and `end = collection.size()`. If you are slicing, an additional header property `X-Total-Count` will be returned which will hold the total documents in the collection.
 
 ```url
 hostname:port/your_collection?_start=10&_end=20
