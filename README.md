@@ -7,6 +7,7 @@
   - [Introduction](#introduction)
     - [Foreword](#foreword)
     - [Todo](#todo)
+    - [Features](#features)
   - [Getting started](#getting-started)
   - [CRUD API](#crud-api)
     - [Endpoints](#endpoints)
@@ -38,6 +39,17 @@
 - ~~Implement schema validation for creates.~~
 - Implement schema validation for updates.
 - Implement an admin interface.
+
+### Features
+
+- Automatic CRUD API generation through the editing of config files (Theres only 3 files).
+- Comprehensive CRUB operations.
+  - Find endpoint supports data operators such as — filter, sort, and slice.
+  - Update and remove endpoints support find by id as well as filter.
+  - Update and remove endpoints support modifying multiple documents through the filter function.
+  - Create endpoint supports automatic schema validation when schema is defined.
+- Supports middleware functions for lodash chaining via mixins.
+- By design each collection is saved in it's own JSON file thereby minimizing file size when writing to disk.
 
 ## Getting started
 
