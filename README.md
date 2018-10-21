@@ -8,6 +8,7 @@
     - [Foreword](#foreword)
     - [Features](#features)
     - [Just don't do it](#just-dont-do-it)
+      - [Known Test Result](#known-test-result)
     - [Todo](#todo)
   - [Getting started](#getting-started)
   - [API](#api)
@@ -54,6 +55,20 @@ As great as I think \_api is, there are a few things I'm going to mention... and
 - Don't store Base64 media in the database. It's going to cause bloat and slow down \_api. If you need to store images, store them elsewhere and link to them in the database.
 - If you need high concurrent access to the \_api, this isn't for you. In fact NodeJS is probably not for you — look elsewhere.
 - You can throw more hardware (CPU and RAM) at \_api but remember; cost to performance. LowDB doesn't scale very well if at all. I've sharded the database into separate JSON objects for each collection so it's as scaled as it can be within reason (and simplicity of code) I might in future explore further methods to enable clustering and PM2 integration but for now it's good enough.
+
+**Now just to iterate the fact once more** — I did a quick (basic) load test with the default setup on a **[DigitalOcean $5.00 droplet](https://www.digitalocean.com/pricing)** using [loader.io](https://loader.io). The results pretty much show that while it's entirely possible to run 250 - 500 sustained concurrent requests creating thousands upon thousands of validated documents in the collection for a 5 minute duration, it's not the smartest thing to do given that the response time (round trip) average was hitting 1000 - 1500ms.
+
+Having said that, \_api can happily handle 50 sustained concurrent users creating validated documents on the **[DigitalOcean $5.00 droplet](https://www.digitalocean.com/pricing)** with a response time (round trip) average of 250ms. On top of this during this load test, PM2 Monitor was showing the event loop cycle happily sitting at ~0.7ms and all responses taking anywhere between 6-25ms. So if you really want to handle larger request loads — just throw more money at it and ramp up the CPU + RAM numbers.
+
+#### Known Test Result
+
+- **Server:** DigitalOcean $5.00 Droplet — 1 Virtual CPU — 512MB RAM - 25GB Storage — Singapore.
+- **Loader:** Loader.io — 50 Concurrent Users Per Second — 5 Minute Duration - Unknown Location (Probably the US).
+- **Endpoint:** /users/create - schema validated — Dynamic JSON payload that generated a firstName, lastName key:value pair from 0 - 9223372036854775807.
+- **Round Time:** ~250ms average.
+- **Error Rate:** 0%.
+- **Server Response Time:** ~6-25ms average.
+- **NodeJS Event Loop Cycle:** ~0.7ms average.
 
 ### Todo
 
