@@ -21,6 +21,7 @@
     - [getTotalCollections()](#gettotalcollections)
     - [responseBuilder()](#responsebuilder)
     - [requestQueryHandler()](#requestqueryhandler)
+    - [validateSchema()](#validateschema)
   - [License](#license)
 
 ## Introduction
@@ -284,6 +285,14 @@ The router will have the logic to handle this for you but if you are modifying t
 
 ```js
 requestQueryHandler((request: Object), (collection: Object), (collectionKey: String));
+```
+
+### validateSchema()
+
+Barebones JSON validator. Accepts two JSON objects; first one is the incoming object to be validated, second one is the JSON schema object used to validate (For more information on the format of the JSON scheme — go to [Nijikokun/Validator](https://github.com/Nijikokun/Validator) GitHub repository). Return true if it is valid, false if it is not.
+
+```js
+validateSchema((object: Object), (schema: Object));
 ```
 
 ## License
