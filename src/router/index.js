@@ -3,7 +3,11 @@
 import _ from 'lodash';
 
 // Import additional.
-import { isJSONString, responseBuilder, requestQueryHandler } from '../helpers';
+import DB_CONFIG from '../config/db';
+import { isJSONString, responseBuilder, requestQueryHandler, validateSchema } from '../helpers';
+
+// Create a shorthand handle to the schema object containing all the schemas for the documents.
+const Schemas = DB_CONFIG.SCHEMA;
 
 // Define and export a function that automatically generates a CRUD API for a particular collection.
 export default function Router(Server, Collection) {
@@ -25,17 +29,33 @@ export default function Router(Server, Collection) {
 
     // Endpoint: Create one.
     Server.post(`/${key}/create`, (request, response) => {
-      // Get a handle on the correct collection.
-      // Insert the new document JSON object.
-      // Write it to disk.
-      // After write; build and send a response object.
-      Collection.get(key)
-        .insert(request.body)
-        .write()
-        .then(created => {
-          response.json(responseBuilder(200, request, created));
-        })
-        .catch();
+      function insertDocument() {
+        // Get a handle on the correct collection.
+        // Insert the new document JSON object.
+        // Write it to disk.
+        // After write; build and send a response object.
+        Collection.get(key)
+          .insert(request.body)
+          .write()
+          .then(created => {
+            response.json(responseBuilder(200, request, created));
+          })
+          .catch();
+      }
+
+      // Check to see if there is a schema, if not just insert document.
+      if (Schemas[key]) {
+        // Check to see if the incoming object is valid to the schema.
+        if (validateSchema(request.body, Schemas[key])) {
+          insertDocument();
+        } else {
+          response.json(
+            responseBuilder(400, request, {}, { error: 'bad request: invalid schema' })
+          );
+        }
+      } else {
+        insertDocument();
+      }
     });
 
     // Endpoint: Update by id or update by filter.

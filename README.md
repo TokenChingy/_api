@@ -19,7 +19,7 @@
     - [isJSONString()](#isjsonstring)
     - [getTotalCollections()](#gettotalcollections)
     - [responseBuilder()](#responsebuilder)
-    - [requestQueryHandler()](#requestQueryHandler)
+    - [requestQueryHandler()](#requestqueryhandler)
   - [License](#license)
 
 ## Introduction
@@ -35,7 +35,8 @@
 - ~~Improve README.md.~~
 - ~~Rewrite API endpoint logic to implement functions such as sort, limit, and operators.~~
 - Implement \_gte, \_gt, \_lte, and \_lt comparators to the API for find, update, and remove endpoints.
-- Implement schema validation functionality.
+- ~~Implement schema validation for creates.~~
+- Implement schema validation for updates.
 - Implement an admin interface.
 
 ## Getting started
@@ -58,31 +59,44 @@ npm install
 
 ```js
 SECRET: 'MY_SUPER_SECRET_KEY',
-COLLECTIONS: [
-  {
-    users: []
-  }
-]
 ```
 
 The `SECRET` property is your super secret key for encrypting and decrypting your collection files. Make this super private and hard to guess! By default, this API encrypts and decrypts the collection files, you can disable this by making it an empty string.
 
-`COLLECTIONS` is where the magic happens — this property is what generates the different collections that make up your database which in turn make up the CRUD API. If you want to add more collections, just add an object into the `COLLECTIONS` array like so:
+4. Open up `src/config/db/schema.js` to then add collections and schemas.
+
+`CollectionsSchema` is where the magic happens — this property is what generates the different collections that make up your database which in turn make up the CRUD API. If you want to add more collections, just add an object into the `CollectionsSchema` array like so:
 
 ```js
-COLLECTIONS: [
+export const CollectionsSchema = [
   {
     users: [],
-  },
-  {
-    your_collection: [],
   },
 ];
 ```
 
+5. This step is optional, but if you would like to have schema validation for when you create new documents in your collections, you can also edit `DocumentsSchema` within the `src/config/db/schema.js` file. For more information on the schema format — go to [Nijikokun/Validator](https://github.com/Nijikokun/Validator) GitHub repository. **Currently, schema validation only works for creating documents**. If you don't define a schema, then the create endpoint will just insert the document.
+
+**One really important note for when it comes to defining a schema, your document schema name must match the name of the collection!** For example, if your collection name is `users`, your document schema name **MUST** be `users`.
+
+```js
+export const DocumentsSchema = {
+  users: {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
+  },
+};
+```
+
 _You can delete the users collection, it's there as an example._
 
-1. Now you can start the API.
+6. Now you can start the API.
 
 ```bash
 npm run start
@@ -150,6 +164,8 @@ Create one:
 
 You will need to pass the document values in JSON object defined in your request body. Don't worry about passing an id value as \_api will automatically generate an id for you. The response will be the document created including the unique id for it.
 
+Also to note, you can define a JSON schema for the document in the config file `src/config/db/schema.js`. For more information on how the format of the schema should be — go to [Nijikokun/Validator](https://github.com/Nijikokun/Validator) GitHub repository. **Currently, schema validation only works for creating documents**. If you do not provide a schema, the create endpoint will just create a document in the collection without validation.
+
 ```url
 hostname:port/your_collection/create
 ```
@@ -207,7 +223,7 @@ export default Middleware;
 
 To use this, you would then need to modify the API routes in the `src/router/index.js` file.
 
-On-top of these chained middleware functions, you can also utilise any ExpressJS middleware as you normally would. Just make sure you define it before the collection/database generation logic.
+On-top of these chained middleware functions, you can also utilize any ExpressJS middleware as you normally would. Just make sure you define it before the collection/database generation logic.
 
 ## Helpers
 

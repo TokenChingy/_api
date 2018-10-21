@@ -1,5 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
 // Import node modules.
+import Validator from 'schema-validator';
 import _ from 'lodash';
 
 // Function that checks if a string is of valid JSON.
@@ -118,4 +119,11 @@ export function requestQueryHandler(request, collection, collectionKey) {
     headers,
     data
   };
+}
+
+// Simple JSON schema validation. provide it with the incoming JSON object and then the corresponding schema.
+export function validateSchema(object, schema) {
+  const validator = new Validator(schema);
+  const check = validator.check(object);
+  return !check._error;
 }
