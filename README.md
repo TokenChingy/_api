@@ -17,16 +17,19 @@
       - [Create](#create)
       - [Update](#update)
       - [Remove](#remove)
-  - [Middleware](#middleware)
-  - [Helpers](#helpers)
+  - [Server configuration](#server-configuration)
+    - [Name](#name)
+    - [Port](#port)
+    - [Morgan](#morgan)
+    - [Request rate limit](#request-rate-limit)
+    - [Loader.io](#loaderio)
+  - [Lodash chain middleware](#lodash-chain-middleware)
+  - [Helper functions](#helper-functions)
     - [isJSONString()](#isjsonstring)
     - [getTotalCollections()](#gettotalcollections)
     - [responseBuilder()](#responsebuilder)
     - [requestQueryHandler()](#requestqueryhandler)
     - [validateSchema()](#validateschema)
-  - [Other](#other)
-    - [Request rate limit](#request-rate-limit)
-    - [Loader.io](#loaderio)
   - [License](#license)
 
 ## Introduction
@@ -248,7 +251,29 @@ You can remove one or more by filter. Filter only accepts JSON objects. This mea
 hostname:port/your_collection/remove?_filter={"key":"value"}
 ```
 
-## Middleware
+## Server configuration
+
+### Name
+
+Go to `src/config/server/index.js` and just set a name, any name. `NAME`'s default is `_api`.
+
+### Port
+
+To change the port that \_api is listening to, head over to `src/config/server/index.js` and change the property `PORT` to a port of your desire (must be a number).
+
+### Morgan
+
+[Morgan](https://github.com/expressjs/morgan) is an ExpressJS middleware that does one thing and one thing only — logs requests. You can configure Morgan in `src/config/server/index.js`, the current configuration parameter only allows for format to be defined. You can change this by modifying the middleware load code in `src/index.js`.
+
+### Request rate limit
+
+By default, the server is setup to rate limit all request to all endpoints from the same IP if they hit 100 requests in a minute. You can configure this in the server configuration file `src/config/server/index.js` and alter the properties `windowMs` and `max` under `RATE_LIMIT` object to your content. This functionality is implemented using [express-rate-limit](https://github.com/nfriedly/express-rate-limit).
+
+### Loader.io
+
+By default, \_api supports load testing from [loader.io](https://loader.io/). There is a predefined route available for [loader.io](https://loader.io/) to validate against. To set this up, head to the `src/config/server/index.js` file and edit the `LOADER` property. You just need to supply the string [loader.io](https://loader.io/) provides as the value for the property.
+
+## Lodash chain middleware
 
 If you need to define middleware functions, you can do that easily through the middleware file: `src/middleware/index.js`. All you need to do is define your functions in here and they will be loaded to each collection automatically as lodash mixins (So you can chain them with other middleware or lodash functions). An example:
 
@@ -267,7 +292,7 @@ To use this, you would then need to modify the API routes in the `src/router/ind
 
 On-top of these chained middleware functions, you can also utilize any ExpressJS middleware as you normally would. Just make sure you define it before the collection/database generation logic.
 
-## Helpers
+## Helper functions
 
 The helpers file: `src/helpers/index.js` contain all your reusable functions. Just import this file anywhere you need it and you will have access to the functions defined and exported in there. Currently there are a few helper functions already defined — those are:
 
@@ -323,16 +348,6 @@ Barebones JSON validator. Accepts two JSON objects; first one is the incoming ob
 ```js
 validateSchema((object: Object), (schema: Object));
 ```
-
-## Other
-
-### Request rate limit
-
-By default, the server is setup to rate limit all request to all endpoints from the same IP if they hit 100 requests in a minute. You can configure this in the server configuration file `src/config/server/index.js` and alter the properties `windowMs` and `max` under `RATE_LIMIT` object to your content. This functionality is implemented using [express-rate-limit](https://github.com/nfriedly/express-rate-limit).
-
-### Loader.io
-
-By default, \_api supports load testing from [loader.io](https://loader.io/). There is a predefined route available for [loader.io](https://loader.io/) to validate against. To set this up, head to the `src/config/server/index.js` file and edit the `LOADER` property. You just need to supply the string [loader.io](https://loader.io/) provides as the value for the property.
 
 ## License
 
