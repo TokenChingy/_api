@@ -1,6 +1,7 @@
-# \_api
-
 ![_api](https://i.imgur.com/ej1ITlC.png)
+
+# \_api
+[![Build Status](https://travis-ci.org/TokenChingy/_api.svg?branch=master)](https://travis-ci.org/TokenChingy/_api)
 
 ## Table of Contents
 
@@ -44,7 +45,7 @@
 
 ### Features
 
-- Automatic CRUD API generation through the editing of config files (Theres only 3 files).
+- Automatic CRUD API generation through the editing of config files (theres only 3 files).
 - Comprehensive CRUD operations.
   - Find endpoint supports data operators such as — filter, sort, and slice.
   - Update and remove endpoints support find by id as well as filter.
@@ -70,7 +71,7 @@ Having said that, \_api can happily handle 50 sustained concurrent users creatin
 
 - **Server:** DigitalOcean $5.00 Droplet — 1 Virtual CPU — 512MB RAM - 25GB Storage — Singapore.
 - **Loader:** Loader.io — 50 Concurrent Users Per Second — 5 Minute Duration - Unknown Location (Probably the US).
-- **Endpoint:** /users/create - schema validated — Dynamic JSON payload that generated a firstName, lastName key:value pair from 0 - 9223372036854775807.
+- **Endpoint:** /users/create — schema validated — Dynamic JSON payload that generated a firstName, lastName key:value pair from 0 - 9223372036854775807.
 - **Round Time:** ~250ms average.
 - **Error Rate:** 0%.
 - **Server Response Time:** ~6-25ms average.
@@ -121,6 +122,7 @@ export const CollectionsSchema = [
   },
 ];
 ```
+_You can delete the users collection, it's there as an example._
 
 5. This step is optional, but if you would like to have schema validation for when you create new documents in your collections, you can also edit `DocumentsSchema` within the `src/config/db/schema.js` file. For more information on the schema format — go to [Nijikokun/Validator](https://github.com/Nijikokun/Validator) GitHub repository. **Currently, schema validation only works for creating documents**. If you don't define a schema, then the create endpoint will just insert the document.
 
@@ -141,15 +143,13 @@ export const DocumentsSchema = {
 };
 ```
 
-_You can delete the users collection, it's there as an example._
-
 6. Now you can start the API.
 
 ```bash
 npm run start
 ```
 
-or if you prefer to develop with Nodemon;
+or if you prefer to develop with [Nodemon](https://github.com/remy/nodemon):
 
 ```bash
 npm run watch
