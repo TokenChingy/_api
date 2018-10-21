@@ -77,6 +77,7 @@ Having said that, \_api can happily handle 50 sustained concurrent users creatin
 - Implement \_gte, \_gt, \_lte, and \_lt comparators to the API for find, update, and remove endpoints.
 - ~~Implement schema validation for creates.~~
 - Implement schema validation for updates.
+- Implement GraphQL.
 - Implement an admin interface.
 
 ## Getting started
