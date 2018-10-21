@@ -3,14 +3,14 @@
 import _ from 'lodash';
 
 // Import additional.
-import { isJSONString, responseBuilder, routerQueries } from '../helpers';
+import { isJSONString, responseBuilder, requestQueryHandler } from '../helpers';
 
 // Define and export a function that automatically generates a CRUD API for a particular collection.
 export default function Router(Server, Collection) {
   _.forEach(Collection.value(), (object, key) => {
     // Endpoint: Find all, find by id, find by filter.
     Server.get(`/${key}:?`, (request, response) => {
-      const result = routerQueries(request, Collection, key);
+      const result = requestQueryHandler(request, Collection, key);
 
       _.forEach(result.headers, (value, header) => {
         response.set(header, value);

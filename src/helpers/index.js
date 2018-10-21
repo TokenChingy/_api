@@ -36,50 +36,44 @@ export function responseBuilder(code, request, data = {}, message = {}) {
   };
 }
 
-// Function that handles all the data operation functions of the router.
-// Currently, this really is only applicable to the 'find' endpoint.
+// Function that extracts and applies queries to the response data.
+// TODO: Rewrite the logic for optimization as it currently has too many _.forEach iterations.
 // TODO: Data operators such as _gte, _lte, gt, and lt. These would be applicable to the other endpoints.
-export function routerQueries(request, collection, collectionKey) {
+export function requestQueryHandler(request, collection, collectionKey) {
   // Get data from relevant collection.
   // Define empty header object.
   let data = collection.get(collectionKey);
   const headers = {};
 
-  let filterParameters;
-
-  // Set default sort parameters.
+  // Set default data operator parameters.
+  const filterParameters = {};
   const sortParameters = {
     sort: '',
     order: 'asc'
   };
-
-  // Set default slice parameters.
   const sliceParameters = {
     start: 0,
     end: data.size()
   };
 
-  // _.forEach doesn't have an iterator...
-  let forIteration = 0;
+  // Checks to see if the _id query has been passed in.
+  // This will only trigger if the query is the first parameter.
+  // It will also mean, all other parameters are redundant.
+  if (request.query._id) {
+    data = data.find({ id: request.query._id });
 
-  // Checks each query operation in order.
+    // Return headers and data objects.
+    return {
+      headers,
+      data
+    };
+  }
+
+  // First _.forEach iteration to extract queries from the request queries object.
   _.forEach(request.query, (queryValue, query) => {
-    // Iterate on each cycle.
-    forIteration += 1;
-
-    // Checks to see if the _id query has been passed in.
-    // This will only trigger if the query is the first parameter.
-    // It will also mean, all other parameters are redundant.
-    if (query === '_id' && forIteration === 1) {
-      data = data.find({ id: queryValue });
-
-      // This return line will break out of _.forEach.
-      return false;
-    }
-
     // Checks to see if the _filter query has been passed in.
     if (query === '_filter') {
-      if (isJSONString(queryValue)) filterParameters = JSON.parse(queryValue);
+      if (isJSONString(queryValue)) _.assign(filterParameters, JSON.parse(queryValue));
     }
 
     // Checks to see if the _sort query has been passed in.
@@ -90,12 +84,15 @@ export function routerQueries(request, collection, collectionKey) {
 
     // Checks to see if _start or _end queries have been passed in.
     if (query === '_start' || query === '_end') {
+      // Incase a string number is passed in, make sure it's a number.
       const index = parseInt(queryValue, 10);
 
+      // Check that the index is an actual number.
       if (_.isNumber(index)) {
         if (query === '_start') _.assign(sliceParameters, { start: index });
         if (query === '_end') _.assign(sliceParameters, { end: index });
 
+        // Assign total count of documents in collection to the header property 'X-Total-Count'.
         _.assign(headers, {
           'X-Total-Count': data.size()
         });
@@ -103,6 +100,7 @@ export function routerQueries(request, collection, collectionKey) {
     }
   });
 
+  // Second forEach iteration to apply the queries to the data in order based on the request queries object.
   _.forEach(request.query, (queryValue, query) => {
     // Filter data according to the parameters.
     if (query === '_filter') data = data.filter(filterParameters);

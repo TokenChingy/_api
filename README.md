@@ -19,7 +19,7 @@
     - [isJSONString()](#isjsonstring)
     - [getTotalCollections()](#gettotalcollections)
     - [responseBuilder()](#responsebuilder)
-    - [routerQueries()](#routerqueries)
+    - [requestQueryHandler()](#requestQueryHandler)
   - [License](#license)
 
 ## Introduction
@@ -138,7 +138,7 @@ hostname:port/your_collection?_sort=key&_order=desc
 
 Find by slice:
 
-You can slice your results by specifying a start index and an end index. Either is optional and will default to `start = 0` and `end = collection.size()`. If you are slicing, an addition header `X-Total-Count` which will hold the total documents in the result returned.
+You can slice your results by specifying a start index and an end index. Either is optional and will default to `start = 0` and `end = collection.size()`. If you are slicing, an additional header property `X-Total-Count` which will hold the total documents in the result returned.
 
 ```url
 hostname:port/your_collection?_start=10&_end=20
@@ -237,7 +237,7 @@ This function takes in a HTTP status code, request header, data object, and a me
 responseBuilder((code: Number), (request: Object), (data: Object), (message: Object));
 ```
 
-### routerQueries()
+### requestQueryHandler()
 
 The magic function that parses through the `request.query` object to fetch and filter, sort, and slice data. This function will return an object with 2 objects within. The structure is:
 
@@ -255,7 +255,7 @@ The magic function that parses through the `request.query` object to fetch and f
 The router will have the logic to handle this for you but if you are modifying the router — keep this in mind.
 
 ```js
-routerQueries((request: Object), (collection: Object), (collectionKey: String));
+requestQueryHandler((request: Object), (collection: Object), (collectionKey: String));
 ```
 
 ## License
