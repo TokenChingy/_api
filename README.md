@@ -25,6 +25,7 @@
     - [requestQueryHandler()](#requestqueryhandler)
     - [validateSchema()](#validateschema)
   - [Other](#other)
+    - [Request rate limit](#request-rate-limit)
     - [Loader.io](#loaderio)
   - [License](#license)
 
@@ -324,6 +325,10 @@ validateSchema((object: Object), (schema: Object));
 ```
 
 ## Other
+
+### Request rate limit
+
+By default, the server is setup to rate limit all request to all endpoints from the same IP if they hit 100 requests in a minute. You can configure this in the server configuration file `src/config/server/index.js` and alter the properties `windowMs` and `max` under `RATE_LIMIT` object to your content. This functionality is implemented using [express-rate-limit](https://github.com/nfriedly/express-rate-limit).
 
 ### Loader.io
 

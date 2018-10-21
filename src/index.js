@@ -7,6 +7,7 @@ import LodashId from 'lodash-id';
 import LowDB from 'lowdb';
 import Morgan from 'morgan';
 import Path from 'path';
+import RateLimit from 'express-rate-limit';
 import _ from 'lodash';
 
 // Import additional modules.
@@ -19,6 +20,9 @@ import { responseBuilder, getTotalCollections } from './helpers';
 // Create server object.
 // Configure server with middleware to parse JSON objects and URL parameters.
 const Server = new Express();
+const ServerRateLimit = new RateLimit(SERVER_CONFIG.RATE_LIMIT);
+
+// Declare server middleware.
 Server.use(Morgan(SERVER_CONFIG.MORGAN));
 Server.use(BodyParser.json());
 Server.use(
@@ -26,6 +30,7 @@ Server.use(
     extended: true
   })
 );
+Server.use(ServerRateLimit);
 
 // Create a key and encryption object.
 const Encryption = {};
