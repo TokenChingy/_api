@@ -36,7 +36,7 @@
 ### Features
 
 - Automatic CRUD API generation through the editing of config files (Theres only 3 files).
-- Comprehensive CRUB operations.
+- Comprehensive CRUD operations.
   - Find endpoint supports data operators such as — filter, sort, and slice.
   - Update and remove endpoints support find by id as well as filter.
   - Update and remove endpoints support modifying multiple documents through the filter function.
