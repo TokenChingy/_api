@@ -2,8 +2,6 @@
 
 # \_api
 
-**A word on updates,** As much as I'd love to work on this every day, I have to be an adult. So between Monday and Friday updates will be sparse.
-
 ## Table of Contents
 
 - [\_api](#_api)
@@ -43,6 +41,8 @@
 ### Foreword
 
 \_api came about due to sheer curiosity. It's important to understand however, \_api was not built for large-scale applications, it's underlying database layer [LowDB](https://github.com/typicode/lowdb) is built on pure JSON objects for storage and [Lodash](https://lodash.com) for parsing. This doesn't mean that \_api isn't worth your time, the biggest positive that I see with \_api is the sheer simplicity of both the concept and the code written thereby simplifying development and maintenance.
+
+**A word on updates,** As much as I'd love to work on this every day, I have to be an adult. So between Monday and Friday updates will be sparse.
 
 ### Features
 
