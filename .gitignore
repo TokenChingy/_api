@@ -72,9 +72,5 @@ typings/
 # Serverless directories
 .serverless
 
-# Github files
-.github/*
-CODE_OF_CONDUCT.md
-
 # Collection files
 src/collections/*.json
