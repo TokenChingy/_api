@@ -6,7 +6,6 @@ import FileAsync from 'lowdb/adapters/FileAsync';
 import LodashId from 'lodash-id';
 import LowDB from 'lowdb';
 import Morgan from 'morgan';
-import Path from 'path';
 import RateLimit from 'express-rate-limit';
 import _ from 'lodash';
 
@@ -14,8 +13,8 @@ import _ from 'lodash';
 import DB_CONFIG from './config/db';
 import SERVER_CONFIG from './config/server';
 import Middleware from './middleware';
-import Router from './router';
-import { responseBuilder, getTotalCollections } from './helpers';
+import { RouteDynamic, RouteErrors, RouteStatic } from './routes';
+import { getTotalCollections } from './helpers';
 
 // Create server object.
 // Configure server with middleware to parse JSON objects and URL parameters.
@@ -69,7 +68,7 @@ _.forEach(DB_CONFIG.COLLECTIONS, element => {
             inFileSystem += 1;
 
             // Generate CRUD API routes for this collection.
-            Router(Server, Collection);
+            RouteDynamic(Server, Collection);
           })
           .catch(error => {
             throw new Error(error);
@@ -89,31 +88,14 @@ _.forEach(DB_CONFIG.COLLECTIONS, element => {
 });
 
 // Static routes defined here instead of the router function. This is because the router function gets called multiple times to define routes for each collection.
-// Serve a static landing page.
-Server.get('/', (request, response) => {
-  response.sendFile(Path.join(__dirname, './public/index.html'));
-});
-
-// For load testing purposes to validate loader.io.
-// Route is only created if there is a loader string.
-if (!_.isEmpty(SERVER_CONFIG.LOADER)) {
-  Server.get(`/${SERVER_CONFIG.LOADER}`, (request, response) => {
-    response.send(SERVER_CONFIG.LOADER);
-  });
-}
+RouteStatic(Server);
 
 // Poll until collections have all been loaded in memory and saved to the file system.
 // When ready, start Express server and listen to requests.
 const CollectionsReady = setInterval(() => {
   if (inMemory + inFileSystem === getTotalCollections(DB_CONFIG.COLLECTIONS) * 2) {
-    // Handle 404's and 500's.
-    // These have to be defined here after all the promises have executed and collections with their endpoints loaded.
-    Server.use((request, response) => {
-      response.status(404).send(responseBuilder(404, request, {}, { error: 'not found' }));
-    });
-    Server.use((error, request, response) =>
-      response.status(500).send(responseBuilder(500, request, {}, error))
-    );
+    // Error routes defined here once all other routes have been called.
+    RouteErrors(Server);
 
     // Start listening on configured port.
     Server.listen(SERVER_CONFIG.PORT, () => {
