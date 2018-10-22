@@ -2,7 +2,7 @@
 
 # \_api
 
-**A word on updates,** As much as I'd love to work on this every day, I have to feed myself. So between Monday and Friday updates will be sparce.
+**A word on updates,** As much as I'd love to work on this every day, I have to be an adult. So between Monday and Friday updates will be sparse.
 
 ## Table of Contents
 
@@ -124,6 +124,7 @@ export const CollectionsSchema = [
   },
 ];
 ```
+
 _You can delete the users collection, it's there as an example._
 
 5. This step is optional, but if you would like to have schema validation for when you create new documents in your collections, you can also edit `DocumentsSchema` within the `src/config/db/schema.js` file. For more information on the schema format — go to [Nijikokun/Validator](https://github.com/Nijikokun/Validator) GitHub repository. **Currently, schema validation only works for creating documents**. If you don't define a schema, then the create endpoint will just insert the document.
