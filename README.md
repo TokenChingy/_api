@@ -2,6 +2,8 @@
 
 # \_api
 
+**A word on updates,** As much as I'd love to work on this every day, I have to feed myself. So between Monday and Friday updates will be sparce.
+
 ## Table of Contents
 
 - [\_api](#_api)
