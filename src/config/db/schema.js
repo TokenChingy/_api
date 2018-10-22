@@ -10,13 +10,16 @@ export const CollectionsSchema = [
 // EXAMPLE: If you collection is called 'users', your document schema must be called 'users'.
 export const DocumentsSchema = {
   users: {
-    firstName: {
-      type: String,
-      required: true
+    type: 'object',
+    required: ['firstName', 'lastName'],
+    properties: {
+      firstName: {
+        type: 'string'
+      },
+      lastName: {
+        type: 'string'
+      }
     },
-    lastName: {
-      type: String,
-      required: true
-    }
+    additionalProperties: false
   }
 };
