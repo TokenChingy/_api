@@ -1,7 +1,10 @@
 /* eslint no-underscore-dangle: 0 */
 // Import node modules.
-import Validator from 'schema-validator';
+import Ajv from 'ajv';
 import _ from 'lodash';
+
+// Create AJV object.
+const ajv = new Ajv({ allErrors: true });
 
 // Function that checks if a string is of valid JSON.
 export function isJSONString(string) {
@@ -121,9 +124,10 @@ export function requestQueryHandler(request, collection, collectionKey) {
   };
 }
 
-// Simple JSON schema validation. provide it with the incoming JSON object and then the corresponding schema.
+// Simple straight forward schema validation.
 export function validateSchema(object, schema) {
-  const validator = new Validator(schema);
-  const check = validator.check(object);
-  return !check._error;
+  const check = ajv.compile(schema);
+  const isValid = check(object);
+
+  return isValid;
 }
