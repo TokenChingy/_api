@@ -10,8 +10,9 @@
     - [Foreword](#foreword)
     - [Features](#features)
     - [Just don't do it](#just-dont-do-it)
-      - [Known Test Result](#known-test-result)
+      - [Basic benchmark](#basic-benchmark)
     - [Todo](#todo)
+  - [Contributors](#contributors)
   - [Getting started](#getting-started)
   - [Collection and document schemas](#collection-and-document-schemas)
     - [Collections](#collections)
@@ -51,7 +52,7 @@
 
 - Automatic CRUD API generation through the editing of config files (theres only 3 files).
 - Comprehensive CRUD operations.
-  - Find endpoint supports data operators such as — filter, sort, and slice.
+  - Find endpoint supports data operators such as — compare, filter, sort, and slice.
   - Update and remove endpoints support find by id as well as filter.
   - Update and remove endpoints support modifying multiple documents through the filter function.
   - Create endpoint supports automatic schema validation when schema is defined.
@@ -71,10 +72,10 @@ As great as I think \_api is, there are a few things I'm going to mention... and
 
 Having said that, \_api can happily handle 50 sustained concurrent users creating validated documents on the **[DigitalOcean $5.00 droplet](https://www.digitalocean.com/pricing)** with a response time (round trip) average of 250ms. On top of this during this load test, PM2 Monitor was showing the event loop cycle happily sitting at ~0.7ms and all responses taking anywhere between 6-25ms. So if you really want to handle larger request loads — just throw more money at it and ramp up the CPU + RAM numbers.
 
-#### Known Test Result
+#### Basic benchmark
 
 - **Server:** DigitalOcean $5.00 Droplet — 1 Virtual CPU — 512MB RAM - 25GB Storage — Singapore.
-- **Loader:** Loader.io — 50 Concurrent Users Per Second — 5 Minute Duration - Unknown Location (Probably the US).
+- **Loader:** Loader.io — 50 Concurrent Users Per Second — 5 Minute Duration — Unknown Location (Probably the US).
 - **Endpoint:** /users/create — schema validated — Dynamic JSON payload that generated a firstName, lastName key:value pair from 0 - 9223372036854775807.
 - **Round Time:** ~250ms average.
 - **Error Rate:** 0%.
@@ -85,13 +86,18 @@ Having said that, \_api can happily handle 50 sustained concurrent users creatin
 
 - ~~Improve README.md.~~
 - ~~Rewrite API endpoint logic to implement functions such as sort, limit, and operators.~~
-- Implement \_gte, \_gt, \_lte, and \_lt comparators to the API for find, update, and remove endpoints.
+- ~~Implement \_gte, \_gt, \_lte, and \_lt comparators to the API for find~~, update, and remove endpoints.
 - ~~Implement schema validation for creates.~~
 - ~~Implement better schema validation library (AJV).~~
 - Write unit tests.
 - Implement schema validation for updates.
 - Implement GraphQL.
 - Implement an admin interface.
+
+## Contributors
+
+- [TokenChingy](https://github.com/TokenChingy).
+- [Judilsteve](https://github.com/judilsteve).
 
 ## Getting started
 
@@ -179,7 +185,7 @@ export const DocumentsSchema = {
 
 #### Find
 
-Before we go onto the routes, the `find` endpoints are really awesome! They can accept data operators such as filter, sort, and slice. What is even better is that you can chain them! But there is one really important thing to remember before you go chaining your URL queries — the order of operations — the data operators iteration order is non-guarantee as its being called from `_.forEach()` (Lodash).
+Before we go onto the routes, the `find` endpoints are really awesome! They can accept data operators such as filter, sort, and slice. What is even better is that you can chain them! **But there is one really important thing to remember before you go chaining your URL queries — the order of operations — all data operators will be executed with destructive operators first before ordering operators. The order is: Slice -> Filter -> Compare -> Sort.**
 
 Find all:
 
@@ -203,6 +209,16 @@ Filter only accepts JSON objects. This means when you pass it into the URL param
 
 ```url
 hostname:port/your_collection?_filter={"key":"value"}
+```
+
+Find by comparator:
+
+Comparators are like filter except their values are used as a benchmark filter. To use a comparator, you will need to post-fix the comparator to a value you want to compare — e.g. If I want to request documents with the property `age` that are greater than `5`, I would pass the URL parameter `age_gt=5`.
+
+You can use `_gt`, `_gte`, `_lt`, and `_lte` comparators.
+
+```url
+hostname:port/your_collection?key_gt=123&key_gte=123&key_lt=123&key_lte=123
 ```
 
 Find by sort and order:

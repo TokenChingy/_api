@@ -6,6 +6,12 @@ import _ from 'lodash';
 // Create AJV object.
 const ajv = new Ajv({ allErrors: true });
 
+function extractKeyFromComparator(query) {
+  const regex = new RegExp('.+?(?=_)');
+  const queryKey = query.match(regex);
+  return queryKey[0];
+}
+
 // Function that checks if a string is of valid JSON.
 export function isJSONString(string) {
   try {
@@ -49,20 +55,8 @@ export function requestQueryHandler(request, collection, collectionKey) {
   let data = collection.get(collectionKey);
   const headers = {};
 
-  // Set default data operator parameters.
-  const filterParameters = {};
-  const sortParameters = {
-    sort: '',
-    order: 'asc'
-  };
-  const sliceParameters = {
-    start: 0,
-    end: data.size()
-  };
-
   // Checks to see if the _id query has been passed in.
-  // This will only trigger if the query is the first parameter.
-  // It will also mean, all other parameters are redundant.
+  // If it has, discard all other queries and return the document with that particular id.
   if (request.query._id) {
     data = data.find({ id: request.query._id });
 
@@ -73,51 +67,131 @@ export function requestQueryHandler(request, collection, collectionKey) {
     };
   }
 
-  // First _.forEach iteration to extract queries from the request queries object.
+  // Define an object to store the query parameters.
+  const queryParameters = {
+    slice: {
+      start: 0,
+      end: data.size().value()
+    },
+    filter: {},
+    compare: {
+      gt: {
+        key: undefined,
+        benchmark: undefined
+      },
+      gte: {
+        key: undefined,
+        benchmark: undefined
+      },
+      lt: {
+        key: undefined,
+        benchmark: undefined
+      },
+      lte: {
+        key: undefined,
+        benchmark: undefined
+      }
+    },
+    sort: {
+      key: '',
+      order: 'asc'
+    }
+  };
+
+  // Parse the request query object and populate the queryParameters object with queries.
   _.forEach(request.query, (queryValue, query) => {
-    // Checks to see if the _filter query has been passed in.
-    if (query === '_filter') {
-      if (isJSONString(queryValue)) _.assign(filterParameters, JSON.parse(queryValue));
+    // Define an empty comparator variable.
+    let comparatorType;
+
+    // Check if the query includes a comparator.
+    // Example: If the query is key_gt, then the comparator will be _gt.
+    if (query.includes('_gt')) comparatorType = '_gt';
+    if (query.includes('_gte')) comparatorType = '_gte';
+    if (query.includes('_lt')) comparatorType = '_lt';
+    if (query.includes('_lte')) comparatorType = '_lte';
+
+    // Check for the comparator types.
+    // Assign the parameters to queryParameters.comparator.comparatorType.key/benchmark.
+    switch (comparatorType) {
+      case '_gt':
+        queryParameters.compare.gt.key = extractKeyFromComparator(query);
+        queryParameters.compare.gt.benchmark = parseInt(queryValue, 10);
+        break;
+      case '_gte':
+        queryParameters.compare.gte.key = extractKeyFromComparator(query);
+        queryParameters.compare.gte.benchmark = parseInt(queryValue, 10);
+        break;
+      case '_lt':
+        queryParameters.compare.lt.key = extractKeyFromComparator(query);
+        queryParameters.compare.lt.benchmark = parseInt(queryValue, 10);
+        break;
+      case '_lte':
+        queryParameters.compare.lte.key = extractKeyFromComparator(query);
+        queryParameters.compare.lte.benchmark = parseInt(queryValue, 10);
+        break;
+      default:
+        break;
     }
 
-    // Checks to see if the _sort query has been passed in.
-    if (query === '_sort' || query === '_order') {
-      if (query === '_sort') _.assign(sortParameters, { sort: queryValue });
-      if (query === '_order') _.assign(sortParameters, { order: queryValue });
+    // Check for the different types of queries.
+    // Assign the respective query parameters to the queryParameter object.
+    switch (query) {
+      case '_start':
+        queryParameters.slice.start = parseInt(queryValue, 10);
+        break;
+      case '_end':
+        queryParameters.slice.end = parseInt(queryValue, 10);
+        break;
+      case '_filter':
+        if (isJSONString(queryValue)) _.assign(queryParameters.filter, JSON.parse(queryValue));
+        break;
+      case '_sort':
+        queryParameters.sort.key = queryValue;
+        break;
+      case '_order':
+        queryParameters.sort.order = queryValue;
+        break;
+      default:
+        break;
     }
+  });
 
-    // Checks to see if _start or _end queries have been passed in.
-    if (query === '_start' || query === '_end') {
-      // Incase a string number is passed in, make sure it's a number.
-      const index = parseInt(queryValue, 10);
-
-      // Check that the index is an actual number.
-      if (_.isNumber(index)) {
-        if (query === '_start') _.assign(sliceParameters, { start: index });
-        if (query === '_end') _.assign(sliceParameters, { end: index });
-
-        // Assign total count of documents in collection to the header property 'X-Total-Count'.
+  // Once the queryParameter object has been filled, run through the object and execute queries.
+  // NOTE: The queries are exectures in the order of destructive first then ordering.
+  // ORDER: Slice -> Filter -> Compare -> Sort.
+  _.forEach(queryParameters, (queryValue, query) => {
+    switch (query) {
+      case 'slice':
+        data = data.slice(queryValue.start, queryValue.end);
         _.assign(headers, {
           'X-Total-Count': data.size()
         });
-      }
+        break;
+      case 'filter':
+        if (!_.isEmpty(queryValue)) data = data.filter(queryValue);
+        break;
+      case 'comparator':
+        if (queryValue.gt.key !== undefined) {
+          data = data.filter(document => document[queryValue.gt.key] > queryValue.gt.benchmark);
+        }
+        if (queryValue.gte.key !== undefined) {
+          data = data.filter(document => document[queryValue.gte.key] >= queryValue.gte.benchmark);
+        }
+        if (queryValue.lt.key !== undefined) {
+          data = data.filter(document => document[queryValue.lt.key] < queryValue.lt.benchmark);
+        }
+        if (queryValue.lte.key !== undefined) {
+          data = data.filter(document => document[queryValue.lte.key] <= queryValue.lte.benchmark);
+        }
+        break;
+      case 'sort':
+        if (!_.isEmpty(queryValue.key)) data = data.orderBy(queryValue.key, queryValue.order);
+        break;
+      default:
+        break;
     }
   });
 
-  // Second forEach iteration to apply the queries to the data in order based on the request queries object.
-  _.forEach(request.query, (queryValue, query) => {
-    // Filter data according to the parameters.
-    if (query === '_filter') data = data.filter(filterParameters);
-
-    // Sort data according to the parameters.
-    if (query === '_sort') data = data.orderBy(sortParameters.sort, sortParameters.order);
-
-    // Slice data according to the parameters.
-    if (query === '_start' || query === '_end')
-      data = data.slice(sliceParameters.start, sliceParameters.end);
-  });
-
-  // Finally return queried data.
   return {
     headers,
     data

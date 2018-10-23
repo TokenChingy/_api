@@ -11,13 +11,16 @@ export const CollectionsSchema = [
 export const DocumentsSchema = {
   users: {
     type: 'object',
-    required: ['firstName', 'lastName'],
+    required: ['firstName', 'lastName', 'age'],
     properties: {
       firstName: {
         type: 'string'
       },
       lastName: {
         type: 'string'
+      },
+      age: {
+        type: 'number'
       }
     },
     additionalProperties: false
