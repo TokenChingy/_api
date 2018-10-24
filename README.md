@@ -2,10 +2,10 @@
 
 # \_api
 
-## Table of Contents
+## Table of contents
 
 - [\_api](#_api)
-  - [Table of Contents](#table-of-contents)
+  - [Table of contents](#table-of-contents)
   - [Introduction](#introduction)
     - [Foreword](#foreword)
     - [Features](#features)
