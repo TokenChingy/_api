@@ -2,6 +2,11 @@
 
 # \_api
 
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/TokenChingy/_api/graphs/commit-activity)
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/TokenChingy/_api/blob/master/LICENSE)
+
+**UPDATE:** As of 25/10/2018 \_api will be undergoing a rewrite to increase performance accross the stack. In the meantime, \_api will still be actively maintained.
+
 ## Table of contents
 
 - [\_api](#_api)
@@ -89,9 +94,9 @@ Having said that, \_api can happily handle 50 sustained concurrent users creatin
 - ~~Implement \_gte, \_gt, \_lte, and \_lt comparators to the API for find~~, update, and remove endpoints.
 - ~~Implement schema validation for creates.~~
 - ~~Implement better schema validation library (AJV).~~
-- ~~**Implement schema validation for updates.**~~ — Not doing, See issue #9.
-- ~~**Implement GraphQL.**~~ — Not doing, See issue #9.
-- ~~**Implement an admin interface.**~~ — Not doing, See issue #9.
+- ~~Implement schema validation for updates.~~ — Not doing, See issue #[9](https://github.com/TokenChingy/_api/issues/9).
+- ~~Implement GraphQL.~~ — Not doing, See issue #[9](https://github.com/TokenChingy/_api/issues/9).
+- ~~Implement an admin interface.~~ — Not doing, See issue #[9](https://github.com/TokenChingy/_api/issues/9).
 
 ## Contributors
 
