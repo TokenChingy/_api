@@ -5,7 +5,7 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/TokenChingy/_api/graphs/commit-activity)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/TokenChingy/_api/blob/master/LICENSE)
 
-**UPDATE:** As of 25/10/2018 \_api will be undergoing a rewrite to increase performance accross the stack. In the meantime, \_api will still be actively maintained.
+**UPDATE:** As of 25/10/2018 \_api will be undergoing a rewrite to increase performance across the stack. In the meantime, \_api will still be actively maintained.
 
 ## Table of contents
 
