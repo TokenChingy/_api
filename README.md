@@ -2,7 +2,7 @@
 
 # \_api
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/TokenChingy/_api/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-no-red.svg)](https://GitHub.com/TokenChingy/_api/graphs/commit-activity)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/TokenChingy/_api/blob/master/LICENSE)
 
 **UPDATE:** As of 19/08/2019 \_api will not be actively maintained, I'm working on a WebSocket based implementation, I may in the future rewrite this but I just don't use HTTP Requests/Responses in my work/personal projects any more. This still works, and it still works well.
